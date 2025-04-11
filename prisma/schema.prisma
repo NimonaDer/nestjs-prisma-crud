@@ -10,10 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Estado {
+  EN_PROGRESO
+  COMPLETADA
+  EN_ESPERA
+}
+
+
 model Task{
   id Int @id @default(autoincrement())
   title String
   description String?
-  fechaDeCreacion DateTime @default(now()) 
+  createdAt DateTime @default(now()) 
+  updatedAt  DateTime @default(now()) @updatedAt
+  estado     Estado   @default(EN_ESPERA) 
 
 }
+
+

@@ -49,4 +49,27 @@ export class TaskService {
         });
     }
 
+    async updateTaskStatus(id: number, estado: 'EN_PROGRESO' | 'COMPLETADA' | 'EN_ESPERA'): Promise<Task> {
+        const task = await this.prisma.task.update({
+            where: { id },
+            data: { estado }
+        });
+        return task;
+    }
+    async getTasksByDate(date: string): Promise<Task[]> {
+        const parsedDate = new Date(date);
+        
+        const startOfDay = new Date(Date.UTC(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate()));
+        const endOfDay = new Date(startOfDay.getTime() + 86400000); 
+    
+        return this.prisma.task.findMany({
+            where: {
+                createdAt: {
+                   gte: startOfDay, 
+                    lt: endOfDay
+                }
+            }
+        });
+    }
+    
 }

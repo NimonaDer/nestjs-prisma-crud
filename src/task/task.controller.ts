@@ -1,6 +1,6 @@
 import { Update } from './../../node_modules/@sinclair/typebox/value/delta.d';
 
-import { Controller, Get, Post, Put, Delete, Body, Param, NotFoundException} from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Body, Param, NotFoundException, Patch,Query } from "@nestjs/common";
 import { TaskService } from './task.service';
 //import { get } from 'http';
 import {Task} from "@prisma/client"
@@ -43,5 +43,15 @@ export class TaskController {
            }catch(error){
             throw new NotFoundException("task does not exist")
            }
+        }
+
+        @Patch(':id/status')
+        async updateStatus(@Param('id') id: string, @Body('estado') estado: 'EN_PROGRESO' | 'COMPLETADA' | 'EN_ESPERA'): Promise<Task> {
+          return this.taskService.updateTaskStatus(+id, estado);
+        }
+
+        @Get('/by-date')
+        async getTasksByDate(@Query('date') date: string): Promise<Task[]> {
+          return this.taskService.getTasksByDate(date);
         }
 }
